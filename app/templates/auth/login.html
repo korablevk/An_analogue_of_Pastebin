@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - PasteBin</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', path='css/login.css') }}" />
+    <!-- Custom JavaScript -->
+    <script>
+        async function loginUser() {
+            const wrongCredentialsSpan = document.getElementById("wrong_credentials");
+            wrongCredentialsSpan.textContent = "";
+
+            const url = "http://localhost:8000/api/auth/login";
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            await fetch(url, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'}, 
+                body: JSON.stringify({email: email, password: password}),
+            }).then(response => {
+                if (response.status === 200) {
+                    window.location.href = "/pages/main"
+                } else {
+                    wrongCredentialsSpan.textContent = "Incorrect email or password";
+                }
+            });
+        }
+    </script>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <h2 class="text-center mb-4">Login to PasteBin</h2>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" placeholder="Enter your password"
+                        required>
+                    <span id="wrong_credentials"></span>
+                </div>
+                <div class="form-group">
+                    <a href="/login" class="google-btn">
+                        <div class="google-icon"></div>
+                        <span class="btn-text">Signin with Gmail</span>
+                    </a>
+                </div>
+                <button type="button" class="btn btn-primary btn-block" onclick="loginUser()">Login</button>
+                <p class="text-center mt-3">
+                    Not registered yet? <a href="/pages/register">Sign up here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

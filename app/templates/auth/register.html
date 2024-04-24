@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - PasteBin</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', path='css/login.css') }}" />
+    <!-- Custom JavaScript -->
+    <script>
+        async function registerUser() {
+            const url = "http://localhost:8000/api/auth/register";
+            const formData = new FormData();
+            formData.append('email', document.getElementById("email").value);
+            formData.append('password', document.getElementById("password").value);
+            formData.append('name', document.getElementById("name").value);
+
+            await fetch(url, {
+                method: 'POST',
+                body: formData,
+            }).then(response => {
+                if (response.status === 201) {
+                    window.location.href = "/pages/main"
+                }
+            });
+        }
+    </script>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <h2 class="text-center mb-4">Register for PasteBin</h2>
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="name" class="form-control" id="name" placeholder="Enter your name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" placeholder="Enter your password"
+                        required>
+                </div>
+                <button type="button" class="btn btn-primary btn-block" onclick="registerUser()">Register</button>
+                <p class="text-center mt-3">
+                    Already have an account? <a href="/pages/login">Login here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>
