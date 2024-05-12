@@ -13,7 +13,7 @@ from app.users.models import Users
 
 
 def get_token(request: Request):
-    token = request.cookies.get("access_token")
+    token = request.cookies.get("user_access_token")
     if not token:
         raise TokenAbsentException
     return token
@@ -22,7 +22,7 @@ def get_token(request: Request):
 async def get_current_user(token: str = Depends(get_token)):
     try:
         payload = jwt.decode(
-            token, settings.SECRET_KEY, settings.ALGORITHM
+            token, settings.JWT_SECRET_KEY, settings.JWT_ALGORITHM
         )
     except ExpiredSignatureError:
         raise TokenExpiredException

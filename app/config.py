@@ -24,6 +24,10 @@ class Settings(BaseSettings):
     JWT_SECRET_KEY: str
     JWT_ALGORITHM: str
     ACCESS_TOKEN_EXPIRE_MINUTES: int
+    REFRESH_TOKEN_EXPIRE_MINUTES: int
+
+    CLIENT_ID: str
+    CLIENT_secret: str
 
     model_config = SettingsConfigDict(env_file=".env") #, env_prefix="TEST_" if os.getenv("MODE") == "TEST" else ""
 

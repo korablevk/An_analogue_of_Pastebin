@@ -11,24 +11,37 @@
     <link rel="stylesheet" href="{{ url_for('static', path='css/login.css') }}" />
     <!-- Custom JavaScript -->
     <script>
-        async function loginUser() {
-            const wrongCredentialsSpan = document.getElementById("wrong_credentials");
-            wrongCredentialsSpan.textContent = "";
-
-            const url = "http://localhost:8000/api/auth/login";
+        function loginUser() {
             const email = document.getElementById("email").value;
             const password = document.getElementById("password").value;
+            const errorMessage = document.getElementById("error-message");
+            // Assuming an API endpoint for login
+            const url = "http://localhost:8000/api/auth/login";
 
-            await fetch(url, {
+            // Example of client-side validation
+            if (!email || !password) {
+                errorMessage.textContent = "Please fill in all fields";
+                return;
+            }
+
+            // Example of using Fetch API to send login data
+            fetch(url, {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'}, 
-                body: JSON.stringify({email: email, password: password}),
-            }).then(response => {
-                if (response.status === 200) {
-                    window.location.href = "/pages/main"
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = "/pages/main"; // Redirect to dashboard on successful login
                 } else {
-                    wrongCredentialsSpan.textContent = "Incorrect email or password";
+                    errorMessage.textContent = "Incorrect email or password";
                 }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                errorMessage.textContent = "An error occurred. Please try again later.";
             });
         }
     </script>
@@ -48,18 +61,16 @@
                     <label for="password">Password</label>
                     <input type="password" class="form-control" id="password" placeholder="Enter your password"
                         required>
-                    <span id="wrong_credentials"></span>
-                </div>
-                <div class="form-group">
-                    <a href="/login" class="google-btn">
-                        <div class="google-icon"></div>
-                        <span class="btn-text">Signin with Gmail</span>
-                    </a>
                 </div>
                 <button type="button" class="btn btn-primary btn-block" onclick="loginUser()">Login</button>
                 <p class="text-center mt-3">
-                    Not registered yet? <a href="/pages/register">Sign up here</a>
+                    Don't have an account? <a href="/pages/register">Register here</a>
                 </p>
+                <a href="/login" class="google-btn">
+                    <div class="google-icon"></div>
+                    <span class="btn-text">Signin with Gmail</span>
+                </a>
+                <p class="text-center" id="error-message"></p>
             </div>
         </div>
     </div>

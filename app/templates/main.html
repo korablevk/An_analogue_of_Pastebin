@@ -9,6 +9,41 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', path='css/main.css') }}" />
+    <script>
+        function sendPaste() {
+            const commentTextarea = document.getElementById('comment').value;
+            const visibility = document.querySelector('input[name="visibility"]:checked').value;
+            const expiration = document.getElementById('expiration').value;
+            const comment = commentTextarea.value;
+
+            const url = "http://localhost:8000/api/pastes/send";
+
+            if (!comment) {
+                errorMessage.textContent = "Please write note";
+                return;
+            }
+
+            // Send data to backend
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ comment, visibility, expiration})
+            })
+                .then(response => {
+                if (response.ok) {
+                    alert('Comment submitted successfully!');
+                } else {
+                    alert('Error submitting comment. Please try again later.');
+                }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error submitting comment. Please try again later.');
+                });
+        }
+    </script>
 </head>
 
 <body>
@@ -29,7 +64,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/pages/register">Login</a>
+                        <a class="nav-link" href="/pages/login">Login</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Contact</a>
@@ -46,12 +81,31 @@
             <p class="lead">Share text online with ease.</p>
             <hr class="my-4">
             <p>Paste your text below and share it with others.</p>
-            <form>
                 <div class="form-group">
-                    <textarea class="form-control" rows="6" placeholder="Paste your text here"></textarea>
+                    <textarea class="form-control" id="comment" name="comment" rows="6"
+                        placeholder="Paste your text here"></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary btn-lg">Share</button>
-            </form>
+                <div class="form-group">
+                    <label>Visibility:</label><br>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="visibility" id="public" value="PUBLIC" checked>
+                        <label class="form-check-label" for="public">Public</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="visibility" id="private" value="PRIVATE">
+                        <label class="form-check-label" for="private">Private</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="expiration">Expiration Date:</label>
+                    <select class="form-control" id="expiration" name="expiration">
+                        <option value="1">1 day</option>
+                        <option value="7">7 days</option>
+                        <option value="30">30 days</option>
+                        <option value="365">365 days</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg" onclick="sendPaste()">Share</button>
         </div>
     </div>
 
